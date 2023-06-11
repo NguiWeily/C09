@@ -1,0 +1,187 @@
+Files to turn in : ft_split.c
+Allowed functions : malloc
+
+• Create a function that slits a string of character depending on another string of
+characters.
+• You’ll have to use each character from the string charset as a separator.
+• The function returns an array where each box contains the address of a string
+wrapped between two separators. The last element of that array should equal to 0
+to indicate the end of the array.
+
+• There cannot be any empty strings in your array. Draw your conclusions accord-
+ingly.
+
+• The string given as argument won’t be modifiable.
+• Here’s how it should be prototyped :
+char **ft_split(char *str, char *charset);
+
+Certainly! Here's an implementation of the `ft_split` function that splits a string based on a set of separator characters:
+
+```c
+#include <stdlib.h>
+
+int	is_separator(char c, char *charset)
+{
+	while (*charset)
+	{
+		if (c == *charset)
+			return (1);
+		charset++;
+	}
+	return (0);
+}
+
+int	count_words(char *str, char *charset)
+{
+	int count = 0;
+	int in_word = 0;
+
+	while (*str)
+	{
+		if (!is_separator(*str, charset))
+		{
+			if (!in_word)
+			{
+				count++;
+				in_word = 1;
+			}
+		}
+		else
+			in_word = 0;
+		str++;
+	}
+	return (count);
+}
+
+char	*extract_word(char *str, char *charset)
+{
+	int len = 0;
+
+	while (str[len] && !is_separator(str[len], charset))
+		len++;
+	
+	char *word = (char *)malloc((len + 1) * sizeof(char));
+	
+	for (int i = 0; i < len; i++)
+		word[i] = str[i];
+	
+	word[len] = '\0';
+
+	return (word);
+}
+
+char	**ft_split(char *str, char *charset)
+{
+	int word_count = count_words(str, charset);
+	char **result = (char **)malloc((word_count + 1) * sizeof(char *));
+	int index = 0;
+	int in_word = 0;
+
+	while (*str)
+	{
+		if (!is_separator(*str, charset))
+		{
+			if (!in_word)
+			{
+				result[index++] = extract_word(str, charset);
+				in_word = 1;
+			}
+		}
+		else
+			in_word = 0;
+		str++;
+	}
+
+	result[index] = NULL;
+
+	return (result);
+}
+```
+
+The `ft_split` function takes two arguments: `str` is the string to be split, and `charset` is the string of separator characters. It returns a dynamically allocated array of strings, where each element of the array contains a substring from `str` wrapped between two separators. The last element of the array is set to NULL to indicate the end of the array.
+
+The `is_separator` function checks if a character `c` is one of the separator characters specified in `charset`.
+
+The `count_words` function counts the number of words in the `str` string based on the separator characters in `charset`.
+
+The `extract_word` function extracts a word from the `str` string starting from the current position, until it encounters a separator character.
+
+The `ft_split` function uses the above helper functions to split the `str` string into individual words and store them in the `result` array.
+
+Make sure to include the necessary header files (`<stdlib.h>` in this case) and compile the program with the appropriate flags to link against the `malloc` function.
+
+The `stdlib.h` header file provides the declarations and definitions for several general-purpose functions in the C standard library, including memory allocation functions like `malloc`.
+
+Here's an example of the `stdlib.h` file:
+
+```c
+#ifndef STDLIB_H
+#define STDLIB_H
+
+// Memory allocation functions
+void *malloc(size_t size);
+void *calloc(size_t nmemb, size_t size);
+void *realloc(void *ptr, size_t size);
+void free(void *ptr);
+
+// Other functions
+int atoi(const char *str);
+long int strtol(const char *str, char **endptr, int base);
+double strtod(const char *str, char **endptr);
+
+// ... other declarations ...
+
+#endif /* STDLIB_H */
+```
+
+To compile a program that uses the `malloc` function, you need to include the `-l` flag to link against the standard C library, which includes `malloc`. The command to compile the program with the appropriate flags would be:
+
+```
+gcc your_program.c -o your_program -Wall -Wextra -Werror -std=c99
+```
+
+This command compiles `your_program.c` and creates an executable named `your_program`. The `-Wall`, `-Wextra`, and `-Werror` flags enable additional compiler warnings and treat warnings as errors. The `-std=c99` flag specifies the C99 standard.
+
+Note: The above command assumes that `your_program.c` is the name of your C source file. Replace it with the actual name of your source file.
+
+Make sure to replace `your_program.c` with the actual name of your C source file and execute the command in the appropriate directory where your source file is located.
+
+Certainly! Here's an example test code for the `ft_split` function:
+
+```c
+#include <stdio.h>
+#include "libft.h" // Assuming you have created a "libft.h" header file
+
+void print_str_array(char **str_array) {
+    for (int i = 0; str_array[i] != NULL; i++) {
+        printf("%s\n", str_array[i]);
+    }
+}
+
+int main(void) {
+    char *str = "Hello,world,this,is,a,test";
+    char *charset = ",";
+
+    char **result = ft_split(str, charset);
+    if (result == NULL) {
+        printf("Error: Unable to split the string.\n");
+        return 1;
+    }
+
+    print_str_array(result);
+
+    // Free the allocated memory
+    for (int i = 0; result[i] != NULL; i++) {
+        free(result[i]);
+    }
+    free(result);
+
+    return 0;
+}
+```
+
+In this test code, we first define a string `str` and a separator `charset`. We then call the `ft_split` function with these arguments. If the function successfully splits the string, it returns an array of strings. We print each string in the resulting array using the `print_str_array` function.
+
+Remember to replace `"libft.h"` with the actual name of your header file containing the `ft_split` function prototype. Compile the code with the appropriate flags, including linking against the `malloc` function, as mentioned in the previous response.
+
+Make sure to include any necessary header files and adjust the test case according to your implementation of the `ft_split` function.

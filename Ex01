@@ -1,0 +1,74 @@
+Files to turn in : Makefile
+Allowed functions : None
+
+• Create the Makefile that’ll compile a library libft.a.
+• Your makefile should print all the command it’s running.
+• Your makefile should not run any unnecessary command.
+• The Makefile will get its source files from the "srcs" directory.
+• Those files will be: ft_putchar.c, ft_swap.c, ft_putstr.c, ft_strlen.c, ft_strcmp.c
+• The Makefile will get its header files from the "includes" directory.
+• Those files will be: ft.h
+• It should compile the .c files with gcc and with -Wall -Wextra -Werror flags in that
+order.
+• The lib should be at the root of the exercise.
+• .o files should be near their .c file.
+• The Makefile should also implement the following rules: clean, fclean, re, all
+and of course libft.a.
+• Running just make should be equal to make all
+• The rule all should be equal to make libft.a.
+• The rule clean should remove all the temporary generated files.
+
+• The rule fclean should be like a make clean plus all the binary made with make
+all.
+• The rule re should be like a make fclean followed by make all.
+• Your makefile should not compile any file for nothing.
+• We’ll only fetch your Makefile and test it with our files.
+
+Here's an example of a Makefile that can be used to compile the `libft.a` library:
+
+```makefile
+NAME = libft.a
+CC = gcc
+CFLAGS = -Wall -Wextra -Werror
+SRCDIR = srcs
+INCDIR = includes
+
+SRCFILES = ft_putchar.c ft_swap.c ft_putstr.c ft_strlen.c ft_strcmp.c
+SRCS = $(addprefix $(SRCDIR)/,$(SRCFILES))
+OBJS = $(SRCS:.c=.o)
+
+.PHONY: all clean fclean re
+
+all: $(NAME)
+
+$(NAME): $(OBJS)
+	@ar rc $(NAME) $(OBJS)
+	@ranlib $(NAME)
+	@echo "Library $(NAME) created"
+
+%.o: %.c
+	@$(CC) $(CFLAGS) -c $< -o $@
+	@echo "Compiling $<"
+
+clean:
+	@rm -f $(OBJS)
+	@echo "Cleanup complete"
+
+fclean: clean
+	@rm -f $(NAME)
+	@echo "Executable removed"
+
+re: fclean all
+```
+
+In this Makefile, the `NAME` variable is set to `libft.a`, the name of the library to be created. The `CC` variable specifies the compiler (gcc) and the `CFLAGS` variable contains the compilation flags.
+
+The source files are located in the `srcs` directory, and the header files are located in the `includes` directory. The `SRCS` variable is defined as the list of source files, and the `OBJS` variable contains the corresponding object files.
+
+The rule `all` is the default rule and is set to build the library (`$(NAME)`). The object files are compiled using the pattern rule `%.o: %.c`, and the library is created using the `ar` and `ranlib` commands.
+
+The `clean` rule removes the object files, and the `fclean` rule additionally removes the library file. The `re` rule is used to perform a clean rebuild by first running `fclean` and then `all`.
+
+To use this Makefile, save it in the same directory as the source files and header files (`srcs` and `includes` directories). Then, simply run `make` to build the library. You can also use other targets like `clean`, `fclean`, or `re` to perform specific actions.
+
+Note: Make sure the indentation in the Makefile is done using tabs, as required by Makefile syntax.

@@ -1,0 +1,108 @@
+Files to turn in : libft_creator.sh, ft_putchar.c, ft_swap.c, ft_putstr.c,
+ft_strlen.c, ft_strcmp.c
+Allowed functions : write
+
+• Create your ft library. It’ll be called libft.a.
+• A shell script called libft_creator.sh will compile source files appropriately and
+will create your library.
+• This library should contain all of the following functions :
+void ft_putchar(char c);
+void ft_swap(int *a, int *b);
+void ft_putstr(char *str);
+int ft_strlen(char *str);
+int ft_strcmp(char *s1, char *s2);
+
+• We’ll launch the following command-line :
+sh libft_creator.sh
+
+Here's an example content for the `libft_creator.sh` script that compiles the provided source files and creates the `libft.a` library:
+
+```bash
+#!/bin/bash
+
+gcc -Wall -Wextra -Werror -c ft_putchar.c
+gcc -Wall -Wextra -Werror -c ft_swap.c
+gcc -Wall -Wextra -Werror -c ft_putstr.c
+gcc -Wall -Wextra -Werror -c ft_strlen.c
+gcc -Wall -Wextra -Werror -c ft_strcmp.c
+
+ar -rc libft.a ft_putchar.o ft_swap.o ft_putstr.o ft_strlen.o ft_strcmp.o
+ranlib libft.a
+
+rm -f ft_putchar.o ft_swap.o ft_putstr.o ft_strlen.o ft_strcmp.o
+```
+
+In this script, we first compile each of the source files (`ft_putchar.c`, `ft_swap.c`, `ft_putstr.c`, `ft_strlen.c`, `ft_strcmp.c`) using `gcc` with appropriate flags (`-Wall`, `-Wextra`, `-Werror`) to generate the corresponding object files. Then, we use the `ar` command to create the `libft.a` library by archiving the object files. Finally, we use `ranlib` to generate an index for the library, and remove the object files.
+
+Save the above script into a file named `libft_creator.sh`, and make sure it has execute permissions. Then, you can run the following command in the terminal to create the `libft.a` library:
+
+```
+sh libft_creator.sh
+```
+
+After running the script, the `libft.a` library will be created and ready to be used in other programs.
+
+To create a test program for the `libft.a` library, you can follow the steps below:
+
+1. Create a new file named `test_libft.c` with the following content:
+
+```c
+#include <stdio.h>
+#include "libft.h"
+
+int main() {
+    ft_putchar('A');
+    printf("\n");
+
+    int a = 42;
+    int b = 24;
+    ft_swap(&a, &b);
+    printf("After swap: a = %d, b = %d\n", a, b);
+
+    char *str = "Hello, world!";
+    ft_putstr(str);
+    printf("\n");
+
+    char *str1 = "Hello";
+    char *str2 = "World";
+    int cmp = ft_strcmp(str1, str2);
+    printf("Comparison result: %d\n", cmp);
+
+    char *str3 = "OpenAI";
+    int len = ft_strlen(str3);
+    printf("Length of string: %d\n", len);
+
+    return 0;
+}
+```
+
+2. Save the file and compile it with the `libft.a` library. Assuming the library and the test program are in the same directory, you can use the following command:
+
+```
+gcc -Wall -Wextra -Werror -o test_libft test_libft.c -L. -lft
+```
+
+3. Run the test program by executing `./test_libft` in the terminal.
+
+The test program `test_libft.c` includes the necessary header file `libft.h` and demonstrates the usage of the functions from the `libft.a` library. Each function is called with sample inputs, and the results are printed to the console for verification.
+
+Make sure to have the `libft.a` library file and the `libft.h` header file in the same directory as the `test_libft.c` file when compiling and running the test program.
+
+Note: Make sure that the `libft.h` header file contains the correct function prototypes for the functions in the `libft.a` library.
+
+Certainly! Here's an example of a `libft.h` file that includes the function prototypes for the functions in the `libft.a` library:
+
+```c
+#ifndef LIBFT_H
+#define LIBFT_H
+
+void ft_putchar(char c);
+void ft_swap(int *a, int *b);
+void ft_putstr(char *str);
+int ft_strlen(char *str);
+int ft_strcmp(char *s1, char *s2);
+
+#endif /* LIBFT_H */
+```
+
+You can save this code as `libft.h` in the same directory as your `libft.a` library and `test_libft.c` file. This header file provides the function prototypes for the functions defined in the library, allowing other source files to include and use them.
